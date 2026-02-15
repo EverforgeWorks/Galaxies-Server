@@ -1,0 +1,222 @@
+# ------------------------------------------------------------------------------
+# GALAXIES: BURN RATE - MVP CORE CONFIGURATION
+# ------------------------------------------------------------------------------
+# This monolithic file defines the entire static universe for the prototyping phase.
+#
+# DESIGN PHILOSOPHY:
+# - No complex interconnected files.
+# - No "modules," "crew," or "hardpoints."
+# - The Ship is a static set of variables.
+# - The Economy is Request-Based (Planets generate offers), not Market-Based.
+# ------------------------------------------------------------------------------
+
+# ==============================================================================
+# 1. PLAYER SHIP DEFINITION (The Static Hauler)
+# ==============================================================================
+# In the MVP, every player flies this exact chassis.
+# Progression can be handled later by upgrading these integers.
+# ==============================================================================
+game_balance:
+  starting_credits: 25000
+  fuel_cost_per_unit: 4       # Cost in credits per 1.00 fuel
+  fuel_mass_per_unit: 3       # How much 1.00 unit of fuel weighs
+  base_burn_rate: 350         # Base burn scaled by 100 (75.00)
+  distance_payout_mult: 25    # Credit multiplier for travel distance
+
+player_ship:
+  name: "Standard Hauler"
+  max_fuel: 10000             # 100.00 Units
+  fuel_burn_rate: 350         # Base efficiency (1.00)
+  cargo_capacity: 25
+  passenger_slots: 5
+  max_module_slots: 5
+  base_mass: 3200             # Weight of the empty chassis
+  engine_efficiency: 1250     # Mass-to-Burn divisor (higher is better)
+
+# ==============================================================================
+# 2. COMMODITIES (Tradeable Goods)
+# ==============================================================================
+# Goods exist only to be moved. They have a base value used to calculate
+# contract rewards (e.g., Reward = Base Price * Distance * Multiplier).
+# ==============================================================================
+commodities:
+  - key: "item_water"
+    name: "Purified Water"
+    base_value: 10
+    mass: 50                  # Mass per 1 unit of cargo
+    description: "Essential for life support."
+  - key: "item_grain"
+    name: "Nutrient Grain"
+    base_value: 15
+    mass: 30
+    description: "Basic foodstuff grown in hydroponic bays."
+  - key: "item_ore"
+    name: "Raw Ore"
+    base_value: 20
+    mass: 100
+    description: "Unrefined metals from asteroid mining."
+  - key: "item_metal"
+    name: "Refined Plating"
+    base_value: 40
+    mass: 80
+    description: "Processed metal for construction."
+  - key: "item_fuel"
+    name: "Fuel Cells"
+    base_value: 50
+    mass: 40
+    description: "Compressed energy for starships."
+  - key: "item_textiles"
+    name: "Synthetic Cloth"
+    base_value: 60
+    mass: 20
+    description: "Fabrics for uniforms and habitation."
+  - key: "item_meds"
+    name: "Medical Supplies"
+    base_value: 100
+    mass: 10
+    description: "Sterile tools and antibiotics."
+  - key: "item_machinery"
+    name: "Industrial Parts"
+    base_value: 150
+    mass: 150
+    description: "Gears, servos, and hydraulic pumps."
+  - key: "item_chips"
+    name: "Micro-Processors"
+    base_value: 250
+    mass: 5
+    description: "High-tech computing components."
+  - key: "item_isotopes"
+    name: "Unstable Isotopes"
+    base_value: 400
+    mass: 200
+    description: "Dangerous but valuable energy source."
+  
+
+# ==============================================================================
+# 3. PASSENGERS (The Human Cargo)
+# ==============================================================================
+# Simplified to a single entity type.
+# Logic: "Passenger requests transport to [Random Planet]."
+# ==============================================================================
+passenger_config:
+  base_ticket_price: 50 # Credits per LY distance.
+  mass_per_passneger: 80 # Average humanoid weight + luggage.
+  comfort_requirement: 0 # Placeholder for future complexity.
+
+# ==============================================================================
+# 4. PLANETS (The Nodes)
+# ==============================================================================
+# The universe consists of these 8 static nodes.
+#
+# LOGIC HOOKS:
+# - coordinates: Used for distance calc (Fuel Cost / Travel Time).
+# - production:  The planet will generate "Sell Orders" for these items.
+# - demand:      The planet will generate "Buy Orders" (Higher Payouts) for these.
+# ------------------------------------------------------------------------------
+planets:
+  - key: "planet_prime"
+    name: "Prime"
+    coordinates: [0, 0]
+    description: "The central hub of the sector. High population."
+    production: ["item_water", "item_grain", "item_textiles"]
+    demand: ["item_isotopes", "item_chips"]
+    min_cargo: 35
+    max_cargo: 80
+    min_passengers: 24
+    max_passengers: 66
+
+  - key: "planet_forge"
+    name: "The Forge"
+    coordinates: [-1, 5]
+    description: "An industrial wasteland of factories."
+    production: ["item_metal", "item_machinery", "item_fuel"]
+    demand: ["item_ore", "item_water", "item_grain"]
+    min_cargo: 24
+    max_cargo: 54
+    min_passengers: 16
+    max_passengers: 35
+
+  - key: "planet_garden"
+    name: "Gardenia"
+    coordinates: [8, 11]
+    description: "Agri-world covered in domes."
+    production: ["item_grain", "item_textiles", "item_water"]
+    demand: ["item_machinery", "item_fuel"]
+    min_cargo: 30
+    max_cargo: 50
+    min_passengers: 35
+    max_passengers: 60
+
+  - key: "planet_ice"
+    name: "Cryo-9"
+    coordinates: [-5, -16]
+    description: "Frozen water world. Primary source of ice."
+    production: ["item_water", "item_isotopes"]
+    demand: ["item_machinery", "item_meds", "item_fuel"]
+    min_cargo: 20
+    max_cargo: 50
+    min_passengers: 12
+    max_passengers: 30
+
+  - key: "planet_rock"
+    name: "Outpost Alpha"
+    coordinates: [14, -5]
+    description: "Mining colony on a barren rock."
+    production: ["item_ore"]
+    demand: ["item_water", "item_grain", "item_meds", "item_machinery"]
+    min_cargo: 12
+    max_cargo: 42
+    min_passengers: 8
+    max_passengers: 22
+
+  - key: "planet_tech"
+    name: "Silicon Spire"
+    coordinates: [-12, 13]
+    description: "High-tech research station."
+    production: ["item_chips", "item_meds"]
+    demand: ["item_isotopes", "item_metal", "item_textiles"]
+    min_cargo: 36
+    max_cargo: 64
+    min_passengers: 28
+    max_passengers: 64
+
+  - key: "planet_void"
+    name: "Void Station"
+    coordinates: [17, 18]
+    description: "Deep space refueling depot."
+    production: ["item_fuel"]
+    demand: ["item_water", "item_grain", "item_chips"]
+    min_cargo: 14
+    max_cargo: 52
+    min_passengers: 18
+    max_passengers: 36
+
+  - key: "planet_fringe"
+    name: "Drifter's End"
+    coordinates: [-18, -8]
+    description: "Lawless edge of the sector."
+    production: ["item_isotopes", "item_ore"]
+    demand: ["item_meds", "item_fuel", "item_metal"]
+    min_cargo: 12
+    max_cargo: 24
+    min_passengers: 8
+    max_passengers: 18
+
+
+  # ==============================================================================
+# 5. SHIP MODULES (Upgrades)
+# ==============================================================================
+ship_modules:
+  - key: "mod_pax_pod"
+    name: "Starliner Seat"
+    description: "Adds +1 Passenger Slot."
+    cost: 10000
+    stat_modifier: "passenger_slots"
+    stat_value: 1
+
+  - key: "mod_cargo_bay"
+    name: "Expanded Hold"
+    description: "Adds +5 Cargo Capacity."
+    cost: 12000
+    stat_modifier: "cargo_capacity"
+    stat_value: 5
