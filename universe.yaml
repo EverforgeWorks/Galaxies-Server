@@ -20,18 +20,17 @@ game_balance:
   starting_credits: 25000
   fuel_cost_per_unit: 4       # Cost in credits per 1.00 fuel
   fuel_mass_per_unit: 3       # How much 1.00 unit of fuel weighs
-  base_burn_rate: 350         # Base burn scaled by 100 (75.00)
   distance_payout_mult: 25    # Credit multiplier for travel distance
 
 player_ship:
   name: "Standard Hauler"
-  max_fuel: 10000             # 100.00 Units
-  fuel_burn_rate: 350         # Base efficiency (1.00)
+  max_fuel: 12000             
+  base_burn_rate: 600         
+  burn_damping: 100           # Higher = Mass affects burn less. (DeltaMass / 100)
   cargo_capacity: 25
   passenger_slots: 5
   max_module_slots: 5
-  base_mass: 3200             # Weight of the empty chassis
-  engine_efficiency: 1250     # Mass-to-Burn divisor (higher is better)
+  base_mass: 3200
 
 # ==============================================================================
 # 2. COMMODITIES (Tradeable Goods)
